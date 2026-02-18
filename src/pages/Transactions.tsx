@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import { Transaction, CreateTransactionDTO, Tag } from '../types';
 import { Button } from '../components/ui/Button';
-import { ChevronLeft, ChevronRight, Plus, X, List, CheckCircle, Circle, Trash2, Check, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, X, Trash2, Check, Clock } from 'lucide-react';
 import { SmartEntry } from '../components/SmartEntry';
 import { TransactionForm } from '../components/TransactionForm';
 import './Transactions.css';

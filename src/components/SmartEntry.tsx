@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetch } from '@tauri-apps/plugin-http';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
-import { Sparkles, Loader2, ArrowRight, Plus } from 'lucide-react';
+import { Sparkles, Loader2, Plus } from 'lucide-react';
 import { CreateTransactionDTO } from '../types';
 
 interface SmartEntryProps {

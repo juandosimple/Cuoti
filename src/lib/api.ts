@@ -293,7 +293,7 @@ export const api = {
             }
         }
 
-        return newItemId;
+        return newItemId as number;
     },
 
     async updateWishlistItem(id: number, data: Partial<Omit<WishlistItem, 'id' | 'options'>>): Promise<void> {

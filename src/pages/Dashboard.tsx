@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, ArrowDownRight, CreditCard, DollarSign, Calendar, AlertCircle } from 'lucide-react';
+import { CreditCard, DollarSign, Calendar, AlertCircle } from 'lucide-react';
 import { api } from '../lib/api';
 import { Transaction } from '../types';
 
-const StatCard = ({ title, amount, icon: Icon, trend, color, subtext }: { title: string, amount: string, icon: any, trend?: string, color: string, subtext?: string }) => (
+const StatCard = ({ title, amount, icon: Icon, color, subtext }: { title: string, amount: string, icon: any, color: string, subtext?: string }) => (
     <div style={{
         backgroundColor: 'var(--surface)',
         border: '1px solid var(--border)',
@@ -30,7 +30,6 @@ const StatCard = ({ title, amount, icon: Icon, trend, color, subtext }: { title:
 
 export const Dashboard = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [loading, setLoading] = useState(true);
 
     const [stats, setStats] = useState({
         monthlyExpenses: 0,
@@ -46,8 +45,6 @@ export const Dashboard = () => {
                 calculateStats(data);
             } catch (error) {
                 console.error("Failed to load dashboard data", error);
-            } finally {
-                setLoading(false);
             }
         };
         loadData();

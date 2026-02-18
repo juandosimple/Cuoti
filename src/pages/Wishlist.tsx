@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../lib/api';
-import { WishlistItem, WishlistOption, Tag } from '../types';
+import { WishlistItem, Tag } from '../types';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Plus, Trash2, ExternalLink, X, ShoppingBag, Calculator, Filter, Pen } from 'lucide-react';

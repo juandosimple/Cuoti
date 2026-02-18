@@ -69,12 +69,6 @@ export const Reports = () => {
     // 2. Stats Cards
     const totalExpense = filteredData.reduce((acc, tx) => acc + (tx.totalAmount || 0), 0);
 
-    // Average Monthly (If 'all' selected, divide by 12 or current month? let's divide by 12 for annual view)
-    // If specific month selected, average doesn't make sense, maybe "Daily Average"?
-    const average = selectedMonth === 'all'
-        ? totalExpense / 12
-        : totalExpense / new Date(selectedYear, (selectedMonth as number) + 1, 0).getDate(); // Daily avg
-
     // 3. Insights
     // Savings: Active subscriptions in this period
     const subExpenses = filteredData

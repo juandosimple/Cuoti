@@ -6,7 +6,7 @@ import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Plus, Trash2, X, ShoppingBag, CalendarClock, Zap, Tag as TagIcon } from 'lucide-react';
 import { api } from '../lib/api';
-import { CreateTransactionDTO, TransactionType, Tag } from '../types';
+import { CreateTransactionDTO, Tag } from '../types';
 import './TransactionForm.css';
 
 // Schema
@@ -73,7 +73,7 @@ interface TransactionFormProps {
 
 export const TransactionForm = ({ initialData, editingTransactionId, onClose, onSuccess }: TransactionFormProps) => {
     const { register, control, handleSubmit, watch, reset, setValue, formState: { errors, isSubmitting } } = useForm<TransactionFormValues>({
-        resolver: zodResolver(transactionSchema),
+        resolver: zodResolver(transactionSchema) as any,
         defaultValues: {
             date: new Date().toISOString().split('T')[0],
             type: 'purchase',
