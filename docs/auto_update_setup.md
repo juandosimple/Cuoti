@@ -7,13 +7,15 @@ To finalize the auto-update configuration, you need to generate signing keys and
 Tauri requires updates to be signed with a private key. Run the following command in your terminal:
 
 ```bash
-npx tauri signer generate -w ./src-tauri/tauri.conf.json --force
+npx tauri signer generate -w ./cuoti.key
 ```
 
-**Note:** If you see an error saying `tauri.conf.json already exists`, the `--force` flag allows the signer to update the existing configuration file with the new public key.
-
 This will:
-1.  Generate a private key (saved to `~/.tauri/myapp.key` or similar).
+1.  Generate a private key (saved to `cuoti.key`).
+2.  Generate a public key (`cuoti.key.pub`).
+3.  Automatically update `src-tauri/tauri.conf.json` with the public key.
+
+**Note:** If prompted for a password, enter one and remember it (or keep it empty for no password, though not recommended).
 2.  Generate a public key.
 3.  Automatically update `src-tauri/tauri.conf.json` with the public key.
 
@@ -34,7 +36,7 @@ Open `src-tauri/tauri.conf.json` and replace `OWNER` and `REPO` in the updater e
 
 ```json
 "endpoints": [
-  "https://github.com/YOUR_USERNAME/YOUR_REPO/releases/latest/download/latest.json"
+  "https://github.com/juandosimple/Cuoti/releases/latest/download/latest.json"
 ]
 ```
 

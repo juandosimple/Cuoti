@@ -30,4 +30,6 @@ src-tauri/gen/
 
 # Secrets
 *.key
+*.pem
+cuoti.key
 .env

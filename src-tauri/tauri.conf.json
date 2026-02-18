@@ -36,8 +36,9 @@
     },
     "plugins": {
         "updater": {
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkzRTU3RkJFQjc1OUI1ODAKUldTQXRWbTN2bi9sazZDUnUyZmNKYkMxUUNjdGtyRWhldy9lK0ZPVkRkRnJDb0x3VWR0eXhlMUkK",
             "endpoints": [
-                "https://github.com/OWNER/REPO/releases/latest/download/latest.json"
+                "https://github.com/juandosimple/Cuoti/releases/latest/download/latest.json"
             ]
         }
     }
