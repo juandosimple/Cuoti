@@ -15,6 +15,7 @@ export const Settings = () => {
     const [tags, setTags] = useState<Tag[]>([]);
     const [newTagName, setNewTagName] = useState('');
     const [newTagColor, setNewTagColor] = useState('#3b82f6'); // Default Blue
+    const [checking, setChecking] = useState(false);
 
     useEffect(() => {
         // Apply theme
@@ -196,26 +197,34 @@ export const Settings = () => {
                         <span style={{ fontWeight: 500 }}>Versión de la App</span>
                         <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>v0.1.0</p>
                     </div>
-                    <Button onClick={async () => {
-                        try {
-                            const { check } = await import('@tauri-apps/plugin-updater');
-                            const { relaunch } = await import('@tauri-apps/plugin-process');
-                            const update = await check();
-                            console.log('Update check result:', update);
-                            if (update?.available) {
-                                if (confirm(`Nueva versión ${update.version} disponible. ¿Actualizar ahora?`)) {
-                                    await update.downloadAndInstall();
-                                    await relaunch();
+                    <Button
+                        disabled={checking}
+                        onClick={async () => {
+                            setChecking(true);
+                            try {
+                                const { check } = await import('@tauri-apps/plugin-updater');
+                                const { relaunch } = await import('@tauri-apps/plugin-process');
+
+                                const update = await check();
+                                console.log('Update result:', update);
+
+                                if (update?.available) {
+                                    if (confirm(`Nueva versión ${update.version} disponible. ¿Actualizar ahora?`)) {
+                                        await update.downloadAndInstall();
+                                        await relaunch();
+                                    }
+                                } else {
+                                    alert('Ya tienes la última versión (v0.1.5).');
                                 }
-                            } else {
-                                alert('Ya tienes la última versión.');
+                            } catch (e) {
+                                console.error(e);
+                                alert('Error: no se pudo buscar actualizaciones. \n\nAsegúrate de que el Release en GitHub esté "Publicado" y no sea un "Draft".\n\nDetalle: ' + e);
+                            } finally {
+                                setChecking(false);
                             }
-                        } catch (e) {
-                            console.error(e);
-                            alert('Error buscando actualizaciones: ' + e);
-                        }
-                    }}>
-                        Buscar Actualizaciones
+                        }}
+                    >
+                        {checking ? 'Buscando...' : 'Buscar Actualizaciones'}
                     </Button>
                 </div>
             </div>
