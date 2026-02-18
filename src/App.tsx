@@ -10,10 +10,23 @@ import { Wishlist } from './pages/Wishlist';
 import { initDb } from './lib/db';
 import { UpdateChecker } from './components/UpdateChecker';
 
+import { useState } from 'react';
+import { Loader } from './components/Loader';
+
 function App() {
+    const [isDbReady, setIsDbReady] = useState(false);
+
     useEffect(() => {
-        initDb().catch(console.error);
+        initDb().then(() => setIsDbReady(true)).catch(console.error);
     }, []);
+
+    if (!isDbReady) {
+        return (
+            <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--background)' }}>
+                <Loader />
+            </div>
+        );
+    }
 
     return (
         <Router>

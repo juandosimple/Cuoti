@@ -1,5 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Receipt, PieChart, Settings, LogOut, Sparkles, Heart } from 'lucide-react';
+import logo from '../assets/logo_cuoti.svg';
+
+import { useEffect, useState } from 'react';
+import { getVersion } from '@tauri-apps/api/app';
 
 const SidebarItem = ({ icon: Icon, label, path, active }: { icon: any, label: string, path: string, active: boolean }) => (
     <Link
@@ -25,6 +29,11 @@ const SidebarItem = ({ icon: Icon, label, path, active }: { icon: any, label: st
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
     const location = useLocation();
+    const [appVersion, setAppVersion] = useState('');
+
+    useEffect(() => {
+        getVersion().then(setAppVersion).catch(console.error);
+    }, []);
 
     return (
         <div style={{ display: 'flex', height: '100vh', backgroundColor: 'var(--background)' }}>
@@ -38,15 +47,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 padding: '1.5rem'
             }}>
                 <div style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{
-                        width: '36px', height: '36px',
-                        backgroundColor: 'var(--primary)',
-                        borderRadius: '8px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: 'white', fontWeight: 'bold'
-                    }}>
-                        C
-                    </div>
+                    <img src={logo} alt="Cuoti Logo" style={{ width: '40px', height: '40px' }} />
                     <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>Cuoti</span>
                 </div>
 
@@ -69,6 +70,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                         <LogOut size={18} />
                         <span>Cerrar Sesión</span>
                     </button>
+                    <div style={{ padding: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)', opacity: 0.7 }}>
+                        v{appVersion}
+                    </div>
                 </div>
             </aside>
 
