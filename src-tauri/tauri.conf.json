@@ -1,1 +1,44 @@
-dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5Mk9uUjdYZ2pvQmRjWEgyREJFTkFnaUNuZzlMa1VWQ0lIRTJHUWt3ZVNQY0FBQkFBQUFBQUFBQUFBQUlBQUFBQTVvVVN6Mk1LdzhuczhWanA0Z290Ukp2WklyUGNuOGdpTGZQYVE4SmlLUXJEeWpxUFZ3ZXg0TUNkWmMvd25XeWYzUm40YjhsZ3B4ejllb3ZmMjU5b21CdFU1VEJESGxuY25JNFIwK2JBcWpodXV1ZE8zYW0za1hId0txUnlnWm9EYUJVaHpBN3A1Ykk9Cg==
+{
+    "$schema": "../gen/schemas/desktop-schema.json",
+    "productName": "cuoti",
+    "version": "0.1.0",
+    "identifier": "com.cuoti.app",
+    "build": {
+        "frontendDist": "../dist",
+        "devUrl": "http://localhost:1420",
+        "beforeDevCommand": "npm run dev",
+        "beforeBuildCommand": "npm run build"
+    },
+    "app": {
+        "windows": [
+            {
+                "title": "Cuoti",
+                "width": 1000,
+                "height": 700,
+                "resizable": true,
+                "fullscreen": false
+            }
+        ],
+        "security": {
+            "csp": null
+        }
+    },
+    "bundle": {
+        "active": true,
+        "targets": "all",
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ]
+    },
+    "plugins": {
+        "updater": {
+            "endpoints": [
+                "https://github.com/OWNER/REPO/releases/latest/download/latest.json"
+            ]
+        }
+    }
+}
