@@ -33,3 +33,6 @@ src-tauri/gen/
 *.pem
 cuoti.key
 .env
+
+# Database
+*.db
