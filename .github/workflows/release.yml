@@ -12,7 +12,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-22.04, windows-latest]
+        include:
+          - platform: macos-latest
+            manifest_target: darwin-aarch64
+          - platform: ubuntu-22.04
+            manifest_target: linux-x86_64
+          - platform: windows-latest
+            manifest_target: windows-x86_64
+
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -34,15 +41,8 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Verify Secrets
-        shell: bash
-        run: |
-          if [ -n "${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}" ]; then
-            echo "TAURI_SIGNING_PRIVATE_KEY is set"
-          else
-            echo "TAURI_SIGNING_PRIVATE_KEY is NOT set"
-            exit 1
-          fi
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Build and Sign App
         env:
@@ -51,14 +51,16 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_KEY_PASSWORD }}
         run: npm run tauri build
 
-      - name: List Build Artifacts (Debug)
+      - name: Generate Manifest Fragment
         shell: bash
         run: |
-          echo "Listing target directory..."
-          find src-tauri/target -name "*.sig"
-          find src-tauri/target -name "latest.json"
+          # Use node to run the script, passing target and version
+          # Ensure we get the version without 'v' prefix if ref has it, or just use package version
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          node scripts/generate-manifest.js "${{ matrix.manifest_target }}" "$VERSION"
 
-      - name: Upload Release Assets
+      - name: Upload Release Assets and Manifest
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
@@ -70,14 +72,41 @@ jobs:
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/nsis/*.exe
             src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/macos/*.app
             src-tauri/target/release/bundle/macos/*.app.tar.gz
             src-tauri/target/release/bundle/macos/*.app.tar.gz.sig
             src-tauri/target/release/bundle/nsis/*.exe.sig
             src-tauri/target/release/bundle/msi/*.msi.sig
             src-tauri/target/release/bundle/appimage/*.AppImage.sig
             src-tauri/target/release/bundle/deb/*.deb.sig
-            src-tauri/target/release/bundle/dmg/*.dmg.sig
-            src-tauri/target/release/bundle/macos/latest.json
-            src-tauri/target/release/bundle/nsis/latest.json
-            src-tauri/target/release/bundle/msi/latest.json
+            manifest-${{ matrix.manifest_target }}.json
+
+      - name: Upload Manifest Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-${{ matrix.manifest_target }}
+          path: manifest-${{ matrix.manifest_target }}.json
+
+  merge-manifests:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Manifests
+        uses: actions/download-artifact@v4
+        with:
+          pattern: manifest-*
+          merge-multiple: true
+
+      - name: Merge Manifests
+        run: |
+          node scripts/merge-manifests.js manifest-*.json
+
+      - name: Upload latest.json
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: latest.json
