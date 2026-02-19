@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.1.15"
+version = "0.1.18"
 description = "A Tauri App"
 authors = ["you"]
 license = ""
@@ -27,3 +27,4 @@ tauri-plugin-sql = { version = "2.3.2", features = ["sqlite"] }
 tauri-plugin-http = "2.5.7"
 tauri-plugin-shell = "2"
 tauri-plugin-updater = "2.10.0"
+tauri-plugin-process = "2"
