@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Tag as TagIcon, Plus, Trash2 } from 'lucide-react';
+import { Moon, Sun, Tag as TagIcon, Plus, Trash2, RefreshCw } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { api } from '../lib/api';
 import { Tag } from '../types';
+import { getVersion } from '@tauri-apps/api/app';
 
 export const Settings = () => {
     // Theme State
@@ -16,6 +17,7 @@ export const Settings = () => {
     const [newTagName, setNewTagName] = useState('');
     const [newTagColor, setNewTagColor] = useState('#3b82f6'); // Default Blue
     const [checking, setChecking] = useState(false);
+    const [appVersion, setAppVersion] = useState('...');
 
     useEffect(() => {
         // Apply theme
@@ -39,6 +41,7 @@ export const Settings = () => {
 
     useEffect(() => {
         fetchTags();
+        getVersion().then(v => setAppVersion(`v${v}`));
     }, []);
 
     const toggleTheme = () => {

@@ -56,3 +56,18 @@ A GitHub Action workflow has been created at `.github/workflows/release.yml`. Wh
 4.  Push the tag: `git push origin v0.1.1`
 
 The GitHub Action will handle the rest.
+
+## Troubleshooting
+
+### macOS: "App is damaged and can't be opened"
+
+Since the app is not notarized by Apple, you might see this error on macOS. To fix it:
+
+1.  Open Terminal.
+2.  Run the following command (replace `/Applications/cuoti.app` with the actual path if different):
+
+```bash
+xattr -cr /Applications/cuoti.app
+```
+
+This removes the quarantine attribute and allows the app to run.
