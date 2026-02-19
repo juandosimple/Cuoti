@@ -34,6 +34,15 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
+      - name: Verify Secrets
+        run: |
+          if [ -n "${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}" ]; then
+            echo "TAURI_SIGNING_PRIVATE_KEY is set"
+          else
+            echo "TAURI_SIGNING_PRIVATE_KEY is NOT set"
+            exit 1
+          fi
+
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
