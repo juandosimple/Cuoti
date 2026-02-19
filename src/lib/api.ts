@@ -352,5 +352,14 @@ export const api = {
     async deleteWishlistOption(id: number): Promise<void> {
         const database = await db;
         await database.execute('DELETE FROM wishlist_options WHERE id = $1', [id]);
+    },
+
+    // --- Crypto / Dolar ---
+    async getDolarQuotes(): Promise<any> {
+        const response = await fetch('https://criptoya.com/api/dolar');
+        if (!response.ok) {
+            throw new Error('Failed to fetch dolar quotes');
+        }
+        return await response.json();
     }
 };

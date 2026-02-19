@@ -7,6 +7,7 @@ import { Reports } from './pages/Reports';
 import { Assistant } from './pages/Assistant';
 import { Settings } from './pages/Settings';
 import { Wishlist } from './pages/Wishlist';
+import { Dolar } from './pages/Dolar';
 import { initDb } from './lib/db';
 import { UpdateChecker } from './components/UpdateChecker';
 
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/assistant" element={<Assistant />} />
                     <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/dolar" element={<Dolar />} />
                     <Route path="/settings" element={<Settings />} />
                 </Routes>
                 <UpdateChecker />

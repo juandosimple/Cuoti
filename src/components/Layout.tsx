@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Receipt, PieChart, Settings, LogOut, Sparkles, Heart } from 'lucide-react';
+import { LayoutDashboard, Receipt, PieChart, Settings, LogOut, Sparkles, Heart, DollarSign } from 'lucide-react';
 import logo from '../assets/logo_cuoti.svg';
 
 import { useEffect, useState } from 'react';
@@ -56,6 +56,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                     <SidebarItem icon={Receipt} label="Transacciones" path="/transactions" active={location.pathname === '/transactions'} />
                     <SidebarItem icon={PieChart} label="Reportes" path="/reports" active={location.pathname === '/reports'} />
                     <SidebarItem icon={Heart} label="Wishlist" path="/wishlist" active={location.pathname === '/wishlist'} />
+                    <SidebarItem icon={DollarSign} label="Dolar" path="/dolar" active={location.pathname === '/dolar'} />
                     <SidebarItem icon={Sparkles} label="Asistente IA" path="/assistant" active={location.pathname === '/assistant'} />
                     <SidebarItem icon={Settings} label="Configuración" path="/settings" active={location.pathname === '/settings'} />
                 </nav>
