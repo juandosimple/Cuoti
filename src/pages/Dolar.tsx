@@ -232,7 +232,7 @@ export const Dolar = () => {
                             <Tooltip
                                 contentStyle={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px' }}
                                 itemStyle={{ color: 'var(--text-main)' }}
-                                formatter={(value: number) => [formatCurrency(value), 'Precio']}
+                                formatter={(value: number | undefined) => [formatCurrency(value || 0), 'Precio'] as [string, string]}
                             />
                             <Area
                                 type="monotone"
