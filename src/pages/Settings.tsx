@@ -193,12 +193,12 @@ export const Settings = () => {
                 boxShadow: 'var(--shadow)'
             }}>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <TagIcon size={20} /> Actualizaciones
+                    <RefreshCw size={20} /> Actualizaciones
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div>
                         <span style={{ fontWeight: 500 }}>Versión de la App</span>
-                        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>v0.1.0</p>
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{appVersion}</p>
                     </div>
                     <Button
                         disabled={checking}
