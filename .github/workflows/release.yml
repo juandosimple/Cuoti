@@ -35,6 +35,7 @@ jobs:
         run: npm ci
 
       - name: Verify Secrets
+        shell: bash
         run: |
           if [ -n "${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}" ]; then
             echo "TAURI_SIGNING_PRIVATE_KEY is set"
