@@ -34,35 +34,34 @@ export const Dolar = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const data = await api.getDolarQuotes();
+            const [data, chartData] = await Promise.all([
+                api.getDolarQuotes(),
+                api.getCryptoChartData(30)
+            ]);
             setQuotes(data);
 
-            // Generate mock history ONLY if not already generated (to stabilize chart)
-            if (history.length === 0) {
-                const currentPrice = data.cripto.usdc.ask;
-                const mockHistory = [];
-                const days = 30;
-                let price = currentPrice * 0.95;
+            if (chartData && chartData.prices) {
+                // The API returns multiple points per day (usually hourly for 30 days).
+                // We want to reduce this to roughly 1 point per day to keep the chart clean like before.
+                // Grouping by date string keeps the last price of the day.
+                const dailyPrices = new Map();
 
-                for (let i = days; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
+                chartData.prices.forEach(([timestamp, price]: [number, number]) => {
+                    const dateObj = new Date(timestamp);
+                    const dateStr = dateObj.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+                    // Map will overwrite earlier entries for the same day, storing the latest price of the day
+                    dailyPrices.set(dateStr, price);
+                });
 
-                    const change = (Math.random() - 0.45) * 0.05;
-                    price = price * (1 + change);
+                const formattedHistory = Array.from(dailyPrices.entries()).map(([dateStr, price]) => ({
+                    date: dateStr,
+                    price: Math.round(price)
+                }));
 
-                    if (i === 0) price = currentPrice;
-
-                    mockHistory.push({
-                        date: date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' }),
-                        price: Math.round(price)
-                    });
-                }
-                setHistory(mockHistory);
+                setHistory(formattedHistory);
             }
-
         } catch (error) {
-            console.error("Error fetching dolar:", error);
+            console.error("Error fetching dolar data:", error);
         } finally {
             setLoading(false);
         }
@@ -204,7 +203,7 @@ export const Dolar = () => {
 
             {/* Chart Section */}
             <div style={cardStyle}>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1.5rem' }}>Evolución Mensual (Estimada)</h3>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1.5rem' }}>Evolución Mensual USDC a ARS</h3>
                 <div style={{ height: '300px', width: '100%' }}>
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={history}>

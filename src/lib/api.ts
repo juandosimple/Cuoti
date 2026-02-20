@@ -361,5 +361,13 @@ export const api = {
             throw new Error('Failed to fetch dolar quotes');
         }
         return await response.json();
+    },
+
+    async getCryptoChartData(days: number = 30): Promise<any> {
+        const response = await fetch(`https://api.coingecko.com/api/v3/coins/usd-coin/market_chart?vs_currency=ars&days=${days}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch crypto chart data');
+        }
+        return await response.json();
     }
 };
