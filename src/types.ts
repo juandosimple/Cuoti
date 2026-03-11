@@ -35,6 +35,8 @@ export interface Transaction {
     recurrenceEndDate?: Date;
     items?: TransactionItem[];
     createdAt: Date;
+    isVirtual?: boolean;
+    originalId?: number;
 }
 
 export interface CreateTransactionDTO {
@@ -51,6 +53,7 @@ export interface CreateTransactionDTO {
     recurrenceEndDate?: Date;
     tagIds?: number[]; // Changed from tagId
     paymentDate?: Date;
+    status?: 'completed' | 'pending';
     items: Omit<TransactionItem, 'id' | 'transactionId'>[];
 }
 

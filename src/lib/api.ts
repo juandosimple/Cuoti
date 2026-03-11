@@ -97,7 +97,7 @@ export const api = {
                 paymentDateStr = pDate.toISOString().split('T')[0];
             }
 
-            const status = 'pending';
+            const status = data.status || 'pending';
 
             // Calculate amounts
             const amountDivisor = loopCount;

@@ -81,11 +81,12 @@ export const getMonthlyTransactions = (
                         // But strictly speaking, for read-only analysis, reusing ID is confusing but acceptable if we don't assume uniqueness of ID in a list of projected impacts.
                         // However, React keys need uniqueness.
                         id: -Math.abs(t.id + month + year * 12),
+                        originalId: t.id,
                         date: virtualDate,
                         paymentDate: virtualPaymentDate,
                         status: 'pending',
                         isVirtual: true // Helpful flag if we add it to type, otherwise ignored or casted
-                    } as Transaction & { isVirtual?: boolean });
+                    });
                 }
             }
         }

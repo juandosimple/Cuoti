@@ -111,17 +111,8 @@ export const Transactions = () => {
 
     // Manual Payment Toggle
     const togglePaymentStatus = async (tx: Transaction) => {
-        // Check heuristics for Virtual Transaction
-        // If the transaction ID exists in our list but with a DIFFERENT date, it's virtual.
-        const originalTx = transactions.find(t => t.id === tx.id);
-
-        // We consider it virtual if dates don't match. 
-        // Note: tx.date from getExpandedTransactions is a Date object. originalTx.date is also a Date object (parsed in fetch).
-        // need to compare time or ISO string.
-        const isVirtual = originalTx && (
-            tx.date.getTime() !== originalTx.date.getTime() &&
-            (!tx.paymentDate || !originalTx.paymentDate || tx.paymentDate.getTime() !== originalTx.paymentDate.getTime())
-        );
+        const isVirtual = tx.isVirtual;
+        const originalTx = isVirtual ? transactions.find(t => t.id === tx.originalId) : transactions.find(t => t.id === tx.id);
 
         if (isVirtual && originalTx) {
             // ACTION: Create a new REAL transaction for this month
@@ -148,30 +139,16 @@ export const Transactions = () => {
                     paymentDate: tx.paymentDate,
                     items: itemsPayload,
                     groupId: originalTx.groupId, // LINK IT!
+                    status: 'completed', // Immediately mark as completed when user clicks complete
                     recurrenceEndDate: undefined
                 };
 
                 await api.addTransaction(payload);
-
-                // After adding, we don't need to update status because addTransaction defaults to 'pending'?
-                // Wait, if the user clicked "Check" (Pay), they want it to be Completed.
-                // But addTransaction defaults to 'pending'.
-                // So we might need to update it immediately? 
-                // Alternatively, addTransaction could accept status, but it doesn't currently.
-                // Or we accept the 'pending' state and let them click again?
-                // Better UX: It should become completed.
-                // Let's just create it. The user will see it "flash" or appear. 
-                // If we want it completed, we need to know the ID.
-                // For now, let's just create the record. It will show up as Pending (Real) instead of Pending (Virtual).
-                // Then the user can click again to Pay. 
-                // bit clunky.
-                // Let's try to update status. But we don't have the ID.
-
             } catch (e) {
                 console.error("Error creating monthly instance", e);
             }
-        } else {
-            // Normal toggle for real transactions
+        } else if (tx.id > 0) {
+            // Normal toggle for real transactions (ignore negative/virtual ids if originalTx not found)
             const newStatus = tx.status === 'pending' ? 'completed' : 'pending';
             await api.updateStatus(tx.id, newStatus);
         }
