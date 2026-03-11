@@ -1,7 +1,7 @@
 {
     "$schema": "../gen/schemas/desktop-schema.json",
     "productName": "cuoti",
-    "version": "0.1.23",
+    "version": "0.1.25",
     "identifier": "com.cuoti.app",
     "build": {
         "frontendDist": "../dist",
