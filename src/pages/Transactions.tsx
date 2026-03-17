@@ -383,15 +383,17 @@ export const Transactions = () => {
                         totalAmount: editingTx.totalAmount,
                         type: editingTx.type,
                         installments: 1,
-                        isRecurring: editingTx.isRecurring,
+                        isRecurring: editingTx.isVirtual ? false : editingTx.isRecurring,
                         isDebt: editingTx.isDebt,
                         debtTo: editingTx.debtTo,
                         tagIds: editingTx.tagIds,
                         paymentDate: editingTx.paymentDate,
                         recurrenceEndDate: editingTx.recurrenceEndDate,
-                        items: editingTx.items && editingTx.items.length > 0 ? editingTx.items : [{ name: editingTx.shopName, price: editingTx.totalAmount, quantity: 1 }]
+                        items: editingTx.items && editingTx.items.length > 0 ? editingTx.items : [{ name: editingTx.shopName, price: editingTx.totalAmount, quantity: 1 }],
+                        groupId: (editingTx.isVirtual && editingTx.originalId) ? (transactions.find(t => t.id === editingTx.originalId)?.groupId || editingTx.groupId) : editingTx.groupId,
+                        status: editingTx.status,
                     } : undefined}
-                    editingTransactionId={editingTx?.id}
+                    editingTransactionId={editingTx?.isVirtual ? undefined : editingTx?.id}
                     onClose={() => {
                         handleCloseForm();
                         setEditingTx(null);

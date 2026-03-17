@@ -23,13 +23,32 @@ export const getMonthlyTransactions = (
     const year = targetDate.getFullYear();
 
     // 1. Identify "Real" payments for recurring groups in this month to avoid duplicates
-    // Map group_id -> boolean (exists in this month)
+    // Also, track the latest real payment to determine the base price for future projections
     const existingRecurringPayments = new Set<string>();
+    const latestRealTxForGroup = new Map<string, Transaction>();
+    const endOfTargetMonth = new Date(year, month + 1, 0);
 
     allTransactions.forEach(t => {
         const date = t.paymentDate ? new Date(t.paymentDate) : new Date(t.date);
-        if (t.groupId && date.getMonth() === month && date.getFullYear() === year) {
-            existingRecurringPayments.add(t.groupId);
+
+        if (t.groupId) {
+            // Check for direct match in target month
+            if (date.getMonth() === month && date.getFullYear() === year) {
+                existingRecurringPayments.add(t.groupId);
+            }
+
+            // Track latest real transaction up to the target month to carry forward price changes
+            if (date <= endOfTargetMonth) {
+                const currentLatest = latestRealTxForGroup.get(t.groupId);
+                if (!currentLatest) {
+                    latestRealTxForGroup.set(t.groupId, t);
+                } else {
+                    const currentLatestDate = currentLatest.paymentDate ? new Date(currentLatest.paymentDate) : new Date(currentLatest.date);
+                    if (date >= currentLatestDate) {
+                        latestRealTxForGroup.set(t.groupId, t);
+                    }
+                }
+            }
         }
     });
 
@@ -75,8 +94,13 @@ export const getMonthlyTransactions = (
                     }
 
                     // Virtual transactions are always 'pending' by default logic unless a real payment exists (handled above)
+                    const baseTx = latestRealTxForGroup.get(t.groupId) || t;
+
                     currentMonthTransactions.push({
                         ...t,
+                        totalAmount: baseTx.totalAmount,
+                        items: baseTx.items,
+                        shopName: baseTx.shopName,
                         // We use a negative ID to easily identify virtuals if needed, or just keep unique
                         // But strictly speaking, for read-only analysis, reusing ID is confusing but acceptable if we don't assume uniqueness of ID in a list of projected impacts.
                         // However, React keys need uniqueness.

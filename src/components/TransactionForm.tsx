@@ -170,6 +170,8 @@ export const TransactionForm = ({ initialData, editingTransactionId, onClose, on
                 paymentDate: data.paymentDate ? new Date(data.paymentDate) : undefined,
                 recurrenceEndDate: data.isRecurring && data.recurrenceEndDate ? new Date(data.recurrenceEndDate) : undefined,
                 items: finalItems,
+                groupId: initialData?.groupId,
+                status: initialData?.status,
             };
 
             if (editingTransactionId) {
